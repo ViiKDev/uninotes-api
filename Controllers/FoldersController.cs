@@ -14,10 +14,10 @@ namespace UniNotesAPI.Controllers
         {
             _context = context;
         }
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Folder>>> Get()
+        [HttpGet("{userId}/all")]
+        public async Task<ActionResult<IEnumerable<Folder>>> GetAllFromUser(int userId)
         {
-            return await _context.Folders.ToListAsync();
+            return await _context.Folders.Where(d => d.UserId == userId).ToListAsync();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Folder>> Get(int id)
@@ -29,13 +29,14 @@ namespace UniNotesAPI.Controllers
             }
             return Ok(folder);
         }
-        [HttpPost]
-        public async Task<ActionResult> Post(Folder folder)
+        [HttpPost("{userId}")]
+        public async Task<ActionResult> Post(int userId, Folder folder)
         {
             if (CheckNullity(folder))
             {
                 return BadRequest();
             }
+            folder.UserId = userId;
             _context.Folders.Add(folder);
             await _context.SaveChangesAsync();
             return Ok();

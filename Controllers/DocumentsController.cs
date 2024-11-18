@@ -14,15 +14,15 @@ namespace UniNotesAPI.Controllers
         {
             _context = context;
         }
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<IEnumerable<Document>>> Get(int userId)
+        [HttpGet("{userId}/all")]
+        public async Task<ActionResult<IEnumerable<Document>>> GetAllFromUser(int userId)
         {
             return await _context.Documents.Where(d => d.UserId == userId).ToListAsync();
         }
-        [HttpGet("{userId}/{id}")]
-        public async Task<ActionResult<Document>> Get(int userId, int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Document>> Get(int id)
         {
-            var document = await _context.Documents.Where(d => d.UserId == userId).FirstOrDefaultAsync(d => d.Id == id);
+            var document = await _context.Documents.FirstOrDefaultAsync(d => d.Id == id);
             if (CheckNullity(document))
             {
                 return NotFound();
@@ -41,8 +41,8 @@ namespace UniNotesAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-        [HttpPut("{userId}/{id}")]
-        public async Task<ActionResult> Put(int userId, int id, Document document)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(int id, Document document)
         {
             if (CheckNullity(document))
             {
@@ -63,10 +63,10 @@ namespace UniNotesAPI.Controllers
             }
             return NoContent();
         }
-        [HttpDelete("{userId}/{id}")]
-        public async Task<ActionResult> Delete(int userId, int id)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
         {
-            var document = await _context.Documents.Where(d => d.UserId == userId).FirstOrDefaultAsync(d => d.Id == id);
+            var document = await _context.Documents.FirstOrDefaultAsync(d => d.Id == id);
             if (CheckNullity(document))
             {
                 return NotFound();

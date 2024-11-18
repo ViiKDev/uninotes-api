@@ -46,7 +46,7 @@ namespace UniNotesAPI.Controllers
             if (user == null) return BadRequest(new { Message = "Invalid username or password!" });
             if (!VerifyPassword(userObj.Password, user.Password)) return BadRequest(new { Message = "Invalid username or password!" });
             user.Token = CreateJwt(user);
-            return Ok(new { Message = "Login successful!", user.Token });
+            return Ok(new { Message = "Login successful!", user.Token, user.Id });
         }
         [HttpPost("register")]
         public async Task<ActionResult> Register(User userObj)
